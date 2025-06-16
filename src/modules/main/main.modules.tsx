@@ -1,5 +1,5 @@
 import { Box, Container, useTheme } from "@mui/material";
-import { VesselTabs } from "../../components";
+import { Chart, VesselTabs } from "../../components";
 
 export const Main = () => {
   const theme = useTheme();
@@ -10,11 +10,18 @@ export const Main = () => {
       sx={{
         height: "100vh",
         display: "flex",
-        justifyContent: "space-between",
-        paddingBlock: "100px",
+        paddingTop: "100px",
+        paddingBottom: "60px",
       }}
     >
-      <Container sx={{ display: "flex", flex: 1 }}>
+      <Container
+        sx={{
+          display: "flex",
+          flex: 1,
+          gap: 2,
+          justifyContent: "space-between",
+        }}
+      >
         <Box
           component="section"
           sx={{
@@ -27,7 +34,17 @@ export const Main = () => {
         >
           <VesselTabs />
         </Box>
-        <Box component="section"></Box>
+        <Box
+          component="section"
+          sx={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Chart />
+        </Box>
       </Container>
     </Box>
   );

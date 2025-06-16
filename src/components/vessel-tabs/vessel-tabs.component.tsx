@@ -1,4 +1,4 @@
-import { Box, Skeleton, Tab, Tabs } from "@mui/material";
+import { Box, Skeleton, Tab, Tabs, Typography } from "@mui/material";
 import { useAppStore, useVesselsStore } from "../../stores";
 
 export const VesselTabs = () => {
@@ -18,10 +18,40 @@ export const VesselTabs = () => {
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Skeleton variant="rectangular" width={210} height={40} />
-        <Skeleton variant="rectangular" width={210} height={40} />
-        <Skeleton variant="rectangular" width={210} height={40} />
-        <Skeleton variant="rectangular" width={210} height={40} />
+        <Skeleton
+          animation="wave"
+          variant="rectangular"
+          width={210}
+          height={40}
+        />
+        <Skeleton
+          animation="wave"
+          variant="rectangular"
+          width={210}
+          height={40}
+        />
+        <Skeleton
+          animation="wave"
+          variant="rectangular"
+          width={210}
+          height={40}
+        />
+        <Skeleton
+          animation="wave"
+          variant="rectangular"
+          width={210}
+          height={40}
+        />
+      </Box>
+    );
+  }
+
+  if (vessels.length === 0) {
+    return (
+      <Box
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <Typography variant="body1">No vessels</Typography>
       </Box>
     );
   }

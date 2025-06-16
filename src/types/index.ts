@@ -1,1 +1,2 @@
-export * from "./vessel.type";
+export * from "./vessel.types";
+export * from "./deviation.types";
