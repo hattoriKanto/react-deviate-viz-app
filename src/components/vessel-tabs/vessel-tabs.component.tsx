@@ -1,9 +1,20 @@
 import { Box, Skeleton, Tab, Tabs, Typography } from "@mui/material";
-import { useAppStore, useVesselsStore } from "../../stores";
+import type React from "react";
+import type { Vessel } from "../../types";
 
-export const VesselTabs = () => {
-  const { vessels, currentVesselIMONo, setCurrentVessel } = useVesselsStore();
-  const { isLoading } = useAppStore();
+type VesselTabsProps = {
+  vessels: Vessel[];
+  currentVesselIMONo: number | null;
+  setCurrentVesselIMONo: React.Dispatch<React.SetStateAction<number | null>>;
+  isLoading: boolean;
+};
+
+export const VesselTabs: React.FC<VesselTabsProps> = ({
+  vessels,
+  currentVesselIMONo,
+  setCurrentVesselIMONo,
+  isLoading,
+}) => {
   const currentIndex = vessels.findIndex(
     (vessel) => vessel.IMONo === currentVesselIMONo
   );
@@ -11,7 +22,7 @@ export const VesselTabs = () => {
   const handleTabChange = (_: React.SyntheticEvent, newIndex: number) => {
     const selectedVessel = vessels[newIndex];
     if (selectedVessel) {
-      setCurrentVessel(selectedVessel.IMONo);
+      setCurrentVesselIMONo(selectedVessel.IMONo);
     }
   };
 

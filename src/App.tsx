@@ -1,44 +1,63 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Header, Main } from "./modules";
-import { fetchAllVessels } from "./api";
-import { useAppStore, useVesselsStore } from "./stores";
+import { calculateDeviationForVessel, fetchAllVessels } from "./api";
 
 export const App = () => {
-  const { setVessels, setCurrentVessel } = useVesselsStore();
-  const { setIsLoading } = useAppStore();
-  const { error, isLoading, data } = useQuery({
-    queryFn: fetchAllVessels,
+  const [currentVesselIMONo, setCurrentVesselIMONo] = useState<number | null>(
+    null
+  );
+
+  const {
+    data: vessels = [],
+    error: vesselError,
+    isLoading: isVesselsLoading,
+  } = useQuery({
+    queryFn: async () => {
+      const result = await fetchAllVessels();
+      if (result[0]) {
+        setCurrentVesselIMONo(result[0].IMONo);
+      }
+      return result;
+    },
     queryKey: ["vessels"],
   });
 
-  useEffect(() => {
-    if (data) {
-      setVessels(data);
-      setCurrentVessel(data[0].IMONo);
-    }
-  }, [data]);
+  const {
+    data: deviation = [],
+    error: deviationError,
+    isLoading: isDeviationLoading,
+  } = useQuery({
+    queryFn: () => calculateDeviationForVessel(currentVesselIMONo!),
+    queryKey: ["deviation", currentVesselIMONo],
+    enabled: !!currentVesselIMONo,
+  });
 
-  useEffect(() => {
-    if (error) {
-      toast("Something went wrong, try again later!", {
-        type: "error",
-        position: "top-center",
-        theme: "dark",
-      });
-      console.error(error);
+  if (deviationError || vesselError) {
+    toast("Something went wrong, try again later!", {
+      type: "error",
+      position: "top-center",
+      theme: "dark",
+    });
+    if (deviationError) {
+      console.error(deviationError);
+    } else {
+      console.error(vesselError);
     }
-  }, [error]);
-
-  useEffect(() => {
-    setIsLoading(isLoading);
-  }, [isLoading]);
+  }
 
   return (
     <>
       <Header />
-      <Main />
+      <Main
+        vessels={vessels}
+        deviation={deviation}
+        isVesselsLoading={isVesselsLoading}
+        isDeviationLoading={isDeviationLoading}
+        currentVesselIMONo={currentVesselIMONo}
+        setCurrentVesselIMONo={setCurrentVesselIMONo}
+      />
       <ToastContainer />
     </>
   );

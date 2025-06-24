@@ -1,7 +1,25 @@
+import type React from "react";
 import { Box, Container, useTheme } from "@mui/material";
 import { Chart, VesselTabs } from "../../components";
+import type { DeviationWithMetadata, Vessel } from "../../types";
 
-export const Main = () => {
+type MainProps = {
+  vessels: Vessel[];
+  deviation: DeviationWithMetadata[];
+  currentVesselIMONo: number | null;
+  setCurrentVesselIMONo: React.Dispatch<React.SetStateAction<number | null>>;
+  isVesselsLoading: boolean;
+  isDeviationLoading: boolean;
+};
+
+export const Main: React.FC<MainProps> = ({
+  vessels,
+  deviation,
+  currentVesselIMONo,
+  setCurrentVesselIMONo,
+  isVesselsLoading,
+  isDeviationLoading,
+}) => {
   const theme = useTheme();
 
   return (
@@ -32,7 +50,12 @@ export const Main = () => {
             borderRightColor: theme.palette.divider,
           }}
         >
-          <VesselTabs />
+          <VesselTabs
+            vessels={vessels}
+            currentVesselIMONo={currentVesselIMONo}
+            setCurrentVesselIMONo={setCurrentVesselIMONo}
+            isLoading={isVesselsLoading}
+          />
         </Box>
         <Box
           component="section"
@@ -43,7 +66,11 @@ export const Main = () => {
             justifyContent: "center",
           }}
         >
-          <Chart />
+          <Chart
+            deviation={deviation}
+            isLoading={isDeviationLoading}
+            currentVesselIMONo={currentVesselIMONo}
+          />
         </Box>
       </Container>
     </Box>

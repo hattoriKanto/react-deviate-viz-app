@@ -1,24 +1,24 @@
 import { Box, Skeleton, Typography, useTheme } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { useVesselsStore } from "../../stores";
-import { calculateDeviationForVessel } from "../../api";
+import type React from "react";
+import type { DeviationWithMetadata } from "../../types";
 
-export const Chart = () => {
+type ChartProps = {
+  deviation: DeviationWithMetadata[];
+  currentVesselIMONo: number | null;
+  isLoading: boolean;
+};
+
+export const Chart: React.FC<ChartProps> = ({
+  deviation,
+  currentVesselIMONo,
+  isLoading,
+}) => {
   const theme = useTheme();
-  const { currentVesselIMONo } = useVesselsStore();
-  const { data = [], isLoading } = useQuery({
-    queryFn: async () => {
-      if (!currentVesselIMONo) {
-        return [];
-      }
-      return await calculateDeviationForVessel(currentVesselIMONo);
-    },
-    queryKey: ["deviation", currentVesselIMONo],
-  });
-  const deviationValues = data.map((item) => Number(item.deviation));
-  const dateValues = data.map((item) => `${item.quarter} ${item.year}`);
+
+  const deviationValues = deviation.map((item) => Number(item.deviation));
+  const dateValues = deviation.map((item) => `${item.quarter} ${item.year}`);
 
   const options = {
     title: {
@@ -63,7 +63,7 @@ export const Chart = () => {
     );
   }
 
-  if (data.length === 0) {
+  if (deviation.length === 0) {
     return (
       <Box
         sx={{
